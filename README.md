@@ -40,3 +40,6 @@ npm run build
 ```
 yarn build
 ```
+
+## Brainstorm
+![Brainstorm](Larek.drawio.png "Text to show on mouseover")
