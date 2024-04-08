@@ -43,3 +43,48 @@ yarn build
 
 ## Brainstorm
 ![Brainstorm](Larek.drawio.png "Text to show on mouseover")
+
+## Данные и типы данных, используемые в приложении
+
+Интерфейс карточек товаров
+
+```
+export interface ICard {
+    id: string;
+    description: string;
+    image: string;
+    title: string;
+    category: string;
+    price: number;
+    itemIndex: number;
+}
+```
+
+Интерфейс товара
+
+```
+export type IProductItem = Pick<ICard, "id" | "description" | "image" | "title" | "category" | "price">
+```
+
+Интерфейс корзины заказов
+
+```
+export interface IOrderForm {
+    items: string[];
+    payment: string;
+    address: string;
+    email: string;
+    phone: string;
+    total: number;
+}
+```
+
+Интерфейс состояния приложения
+
+```
+export interface IAppState {
+    catalog: IProductItem[];
+    preview: string | null;
+    order: IOrderForm | null;
+}
+```
