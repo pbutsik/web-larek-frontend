@@ -262,3 +262,8 @@ export interface IAppState {
 Класс представления информации оформленного заказа.\
 В полях класса хранятся следующие данные:
 - total - общая стоимость заказа
+
+
+[Ссылка на проект](https://github.com/pbutsik/web-larek-frontend)
+
+UML схема приложена /doc/Larek_MVP.drawio.png
