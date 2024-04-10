@@ -42,7 +42,7 @@ yarn build
 ```
 
 ## UML-схема
-![UML](Larek_MVP.drawio.png "UML")
+![UML](doc/Larek_MVP.drawio.png "UML")
 
 ## Данные и типы данных, используемые в приложении
 
