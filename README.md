@@ -42,7 +42,7 @@ yarn build
 ```
 
 ## UML-схема
-![UML](./src/images/Larek_MVP.drawio.png "UML")
+![UML](./src/images/Larek_MVP.png "UML")
 
 ## Данные и типы данных, используемые в приложении
 
@@ -266,4 +266,4 @@ export interface IAppState {
 
 [Ссылка на проект](https://github.com/pbutsik/web-larek-frontend)
 
-UML схема приложена /doc/Larek_MVP.drawio.png
+UML схема приложена ./src/images/Larek_MVP.png
