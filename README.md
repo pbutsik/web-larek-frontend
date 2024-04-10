@@ -41,41 +41,55 @@ npm run build
 yarn build
 ```
 
-## Brainstorm
-![Brainstorm](123.drawio.png "Text to show on mouseover")
+## UML-схема
+![UML](Larek_MVP.drawio.png "UML")
 
 ## Данные и типы данных, используемые в приложении
 
 Интерфейс карточек товаров
 
 ```
-export interface ICard {
-    id: string;
-    description: string;
-    image: string;
-    title: string;
-    category: string;
-    price: number;
-    itemIndex: number;
+export interface IProduct {
+	id: string;
+	title: string;
+	description: string;
+	image: string;
+	category: 'софт-скил'| 'другое'| 'дополнительное'| 'кнопка';
+	price: number | null;
+	ordered: boolean;
+	addToBasket: () => void;
+	deleteFromBasket: () => void;
 }
 ```
 
-Интерфейс товара
+Интерфейс формы c оплатой
 
 ```
-export type IProductItem = Pick<ICard, "id" | "description" | "image" | "title" | "category" | "price">
+export interface IOrderDeliveryForm {
+	payment: string;
+	address: string;
+}
 ```
 
-Интерфейс корзины заказов
+Интерфейс формы с контактными данными
 
 ```
-export interface IOrderForm {
-    items: string[];
-    payment: string;
-    address: string;
-    email: string;
-    phone: string;
-    total: number;
+export interface IOrderContactsForm {
+	email: string;
+	phone: string;
+}
+```
+
+Интерфейс формы
+
+```
+type IOrderForm = IOrderDeliveryForm & IOrderContactsForm;
+
+export interface IOrder extends IOrderForm {
+   items: IProduct[];
+   validation(): void;
+   clearOrder(): void;
+   postOrder(): void; 
 }
 ```
 
@@ -83,9 +97,16 @@ export interface IOrderForm {
 
 ```
 export interface IAppState {
-    catalog: IProductItem[];
-    preview: string | null;
-    order: IOrderForm | null;
+	catalog: IProduct[];
+	basket: IProduct[];
+	order: IOrder;
+	preview: IProduct;
+	checkLotBasket(): boolean;
+	clearBasket(): void;
+	Total(): number;
+	BasketIds(): number;
+	BasketLen(): number;
+	initOrder(): IOrder;
 }
 ```
 
@@ -121,25 +142,62 @@ export interface IAppState {
 - `setImage` - установить изображение с алтернативным текстом
 - `render` - вернуть корневой DOM-элемент
 
-### Слой данных
+#### Класс Model
+Базовый абстракный класс для компонентов модели данных. Связывает переданные данные со свойствами объекта и инициализирует вызов именованных событий через метод emitChanges.
 
-#### Класс AppData
+### Слой данных (Model) Mvp
 
-Класс отвечает за хранение и логику работы с данными корзины, товаров и заказа.\
+#### Класс AppState
+
+Класс данных отвечает за хранение и логику работы с данными корзины, продуктов и заказа.\
 В полях класса хранятся следующие данные:
-- basket - выбранные карточки в корзине
-- catalog - все карточки с сервера
+- basket - отслеживание выбранных карточек в корзине
+- catalog - отслеживание списка доступных карточет продуктов
+- order - отслеживает состояние заказа
+- preview - отслеживает продукт в модальном окне
 
 Методы:
-- `setCatalog` - добавить товар в каталог
-- `setBusket` - добавить товар в корзину
-- `setPreview` - получить id выбранного товара
-- `removeBusket` - удалить товар из корзины
-- `getTotal` - сумма заказа
-- `validateOrder` - валидация
+- `checkProductBasket` - проверяет наличие продукта в корзине
+- `clearBasket` - очищает корзину
+- `Total` - возвращает полную стоимость продуктов в корзине
+- `BasketIds` - возвращает индексы продуктов находящихся в корзине
+- `BasketLen` - возвращает количество продуктов находящихся в корзине
+- `initOrder` - инициализация объекта заказа
 - а так-же сеттеры и геттеры для сохранения и получения данных из полей класса
 
-### Классы представления
+#### Класс Product
+
+Класс данных продукта. Структура определяется ответом сервера. Свойства и методы реализуют логику взаимодействия с корзиной. \
+В полях класса хранятся следующие данные:
+- id - идентификатор продукта
+- title - заголовок
+- description - описание
+- image - путь до файла картинки
+- category -  категория продукта
+- price - цена
+- ordered - признак наличия товара в заказе
+
+Методы:
+- `addToBasket` - добавить в корзину товар
+- `deleteFromBasket` - удалить из корзины товар
+
+#### Класс Order
+
+Класс данных заказа. Содержит свойства, которые отображаются на полях соответствующих форм. Производит валидацию полей формы.
+В полях класса хранятся следующие данные:
+- payment - тип платежа
+- address - адрес
+- email - почта
+- phone - телефон
+- items - объекты продуктов в корзине
+
+Методы:
+- `validation` - проверка полей формы
+- `clearOrder` - очистка полей формы
+- `postOrder` - событие завершения оформления заказа
+- а так-же сеттеры и геттеры для сохранения и получения данных из полей класса
+
+### Классы представления (View) mVp
 Все классы представления отвечают за отображение внутри контейнера (DOM-элемент) передаваемых в них данных.
 
 

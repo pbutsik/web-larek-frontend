@@ -39,33 +39,51 @@
 // ________________________________________________________________________________________________________________________________
 
 // Интерфейс карточек товаров
-export interface ICard {
-    id: string;
-    description: string;
-    image: string;
-    title: string;
-    category: string;
-    price: number;
-    itemIndex: number;
+export interface IProduct {
+	id: string;
+	title: string;
+	description: string;
+	image: string;
+	category: 'софт-скил'| 'другое'| 'дополнительное'| 'кнопка';
+	price: number | null;
+	ordered: boolean;
+	addToBasket: () => void;
+	deleteFromBasket: () => void;
 }
 
-// интерфейс товара
-export type IProductItem = Pick<ICard, "id" | "description" | "image" | "title" | "category" | "price">;
 
+// Интерфейс формы c оплатой
+export interface IOrderDeliveryForm {
+	payment: string;
+	address: string;
+}
 
-// Интерфейс корзины заказов
-export interface IOrderForm {
-    items: string[];
-    payment: string;
-    address: string;
-    email: string;
-    phone: string;
-    total: number;
+// Интерфейс формы с контактными данными
+export interface IOrderContactsForm {
+	email: string;
+	phone: string;
+}
+
+// интерфейс формы
+type IOrderForm = IOrderDeliveryForm & IOrderContactsForm;
+
+export interface IOrder extends IOrderForm {
+   items: IProduct[];
+   validation(): void;
+   clearOrder(): void;
+   postOrder(): void; 
 }
 
 // Интерфейс состояния приложения
 export interface IAppState {
-    catalog: IProductItem[];
-    preview: string | null;
-    order: IOrderForm | null;
+	catalog: IProduct[];
+	basket: IProduct[];
+	order: IOrder;
+	preview: IProduct;
+	checkProductBasket(): boolean;
+	clearBasket(): void;
+	Total(): number;
+	BasketIds(): number;
+	BasketLen(): number;
+	initOrder(): IOrder;
 }
