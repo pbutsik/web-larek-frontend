@@ -44,7 +44,8 @@ export interface IProduct {
 	title: string;
 	description: string;
 	image: string;
-	category: 'софт-скил'| 'другое'| 'дополнительное'| 'кнопка';
+	// category: 'софт-скил'| 'другое'| 'дополнительное'| 'кнопка';
+	category: string;
 	price: number | null;
 	ordered: boolean;
 	addToBasket: () => void;
