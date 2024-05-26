@@ -1,4 +1,5 @@
-import {IEvents} from "./events";
+import {IEvents} from "./BaseEvents";
+import { IProductCategory } from '../../types';
 
 /**
  * Базовый компонент
@@ -48,6 +49,26 @@ export abstract class Component<T> {
                 element.alt = alt;
             }
         }
+    }
+
+    protected modifyPrice(value: number | null) {
+        if (value === null) {
+            return 'Бесценно'
+        }
+        else {
+            return `${String(value)} синапсов`
+        }
+    }
+
+    protected cardCategory(value:IProductCategory) {
+        const categorySet: Record<IProductCategory, string> = {
+            'софт-скил': 'soft',
+            'другое': 'other',
+            'дополнительное': 'additional',
+            'кнопка': 'button',
+            'хард-скил': 'hard',
+        };
+        return categorySet[value]
     }
 
     // Вернуть корневой DOM-элемент

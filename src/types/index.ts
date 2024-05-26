@@ -44,7 +44,6 @@ export interface IProduct {
 	title: string;
 	description: string;
 	image: string;
-	// category: 'софт-скил'| 'другое'| 'дополнительное'| 'кнопка';
 	category: string;
 	price: number | null;
 	ordered: boolean;
@@ -52,28 +51,43 @@ export interface IProduct {
 	deleteFromBasket: () => void;
 }
 
+export type IProductCategory = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил';
 
-// Интерфейс формы c оплатой
-export interface IOrderDeliveryForm {
-	payment: string;
-	address: string;
+export type IPaymentType = 'card' | 'cash';
+
+export interface ICard {
+	category: string;
+	title: string;
+	image: string;
+	price: number;
+	description: string;
+	button?: string;
 }
 
-// Интерфейс формы с контактными данными
-export interface IOrderContactsForm {
+export interface ICardActions {
+	onClick: (event: MouseEvent) => void;
+}
+
+// Интерфейс формы c оплатой
+export interface IOrderForm {
+	payment: IPaymentType;
+	address: string;
 	email: string;
 	phone: string;
 }
 
-// интерфейс формы
-type IOrderForm = IOrderDeliveryForm & IOrderContactsForm;
+export interface IOrderAPI extends IOrderForm {
+	items: string[];
+	total: number; 
+}
 
 export interface IOrder extends IOrderForm {
    items: IProduct[];
-   validation(): void;
    clearOrder(): void;
    postOrder(): void; 
 }
+
+export type IFormErrors = Partial<Record<keyof IOrderForm, string>>;
 
 // Интерфейс состояния приложения
 export interface IAppState {
@@ -87,4 +101,50 @@ export interface IAppState {
 	BasketIds(): number;
 	BasketLen(): number;
 	initOrder(): IOrder;
+}
+
+export interface IOrderResult {
+	id: string;
+	total: number;
+}
+
+export interface IWebLarekAPI {
+	getProduct: (id: string) => Promise<IProduct>;
+	getProductList: () => Promise<IProduct[]>;
+}
+
+export interface IBasketView {
+	items: HTMLElement[];
+	total: number;
+	valid: boolean;
+}
+
+export interface IBasketCard {
+	index: number; 
+	title: string;
+	price: number;
+	delete: () => void;
+}
+
+export interface IFormState {
+	valid: boolean;
+	errors: string[];
+}
+
+export interface IModalData {
+	content: HTMLElement;
+}
+
+export interface IPage {
+	counter: number;
+	galery: HTMLElement[];
+	locked: boolean;
+}
+
+export interface ISuccess {
+    total: number;
+}
+
+export interface IActions {
+    onClick: () => void;
 }
