@@ -1,4 +1,4 @@
-import { IPage } from '../../types';
+import { IPage, TypesOfEvents } from '../../types';
 import { ensureElement } from '../../utils/utils';
 import { Component } from '../base/BaseComponent';
 import { IEvents } from '../base/BaseEvents';
@@ -19,7 +19,7 @@ export class Page extends Component<IPage> {
 		this._basket = ensureElement<HTMLButtonElement>('.header__basket');
 
 		this._basket.addEventListener('click', () => {
-			this.events.emit('basket:open');
+			this.events.emit(TypesOfEvents.OpenBasket);
 		});
 	}
 

@@ -1,8 +1,8 @@
 import './scss/styles.scss';
-import { WebLarekAPI } from './components/model/WebLarekAPI';
+import { WebLarekAPI } from './components/WebLarekAPI';
 import { CDN_URL, API_URL } from './utils/constants';
 import { EventEmitter } from './components/base/BaseEvents';
-import { IProduct, IPaymentType, IFormErrors } from './types';
+import { IProduct, IPaymentType, IFormErrors, TypesOfEvents } from './types';
 import { AppState } from './components/model/AppState';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Page } from './components/view/Page';
@@ -34,6 +34,11 @@ const modal = new Modal(modalElement, events);
 const basket = new Basket(cloneTemplate(basketTemplate), events);
 const deliveryForm = new DeliveryForm(cloneTemplate(orderTemplate), events);
 const contactsForm = new ContactsForm(cloneTemplate(contactsTemplate), events);
+const success = new Success(cloneTemplate(successTemplate), events, {
+	onClick: () => {
+		modal.close();
+	},
+});
 
 // // Чтобы мониторить все события, для отладки
 // events.onAll(({ eventName, data }) => {
@@ -52,10 +57,10 @@ api.getProductList()
     })
 
 // Отображение карточек
-events.on('catalog:changed', () => {
+events.on(TypesOfEvents.DownloadProducts, () => {
 	page.galery = appData.catalog.map((item) => {
 		const card = new Card(cloneTemplate(cardCatalogTemplate), events, {
-			onClick: () => events.emit('card:open', item),
+			onClick: () => events.emit(TypesOfEvents.OpenProduct, item),
 		});
 		return card.render({
 			category: item.category,
@@ -67,17 +72,17 @@ events.on('catalog:changed', () => {
 });
 
 // Блокируем прокрутку страницы при открытии модалки
-events.on('modal:open', () => {
+events.on(TypesOfEvents.OpenModal, () => {
 	page.locked = true;
 });
 
 // Разблокируем прокрутку страницы при закрытии модалки
-events.on('modal:close', () => {
+events.on(TypesOfEvents.CloseModal, () => {
 	page.locked = false;
 });
 
 // Открытие корзины
-events.on('basket:open', () => {
+events.on(TypesOfEvents.OpenBasket, () => {
 	modal.render({
 		content: basket.render({
 			valid: appData.getBasketLength() > 0
@@ -86,7 +91,7 @@ events.on('basket:open', () => {
 });
 
 // Открытие модального окна карточки
-events.on('card:open', (item: IProduct) => {
+events.on(TypesOfEvents.OpenProduct, (item: IProduct) => {
 	// Отображаем результат
 	const card = new Card(cloneTemplate(cardPreviewTemplate), events, {
 		onClick: () => {
@@ -95,7 +100,7 @@ events.on('card:open', (item: IProduct) => {
 			} else {
 				item.addToBasket();
 			}
-			events.emit('card:open', item);
+			events.emit(TypesOfEvents.OpenProduct, item);
 		},
 	});
 
@@ -112,14 +117,14 @@ events.on('card:open', (item: IProduct) => {
 });
 
 // Изменение состояния карточек
-events.on('product:changed', () => {
+events.on(TypesOfEvents.ChangeInBasketPtoducts, () => {
 	page.counter = appData.getBasketLength();
 
 	basket.items = appData.basket.map((item, index) => {
 		const card = new BasketItem(cloneTemplate(cardBasketTemplate), events, {
 			onClick: (event) => {
 				item.deleteFromBasket();
-				events.emit('basket:open');
+				events.emit(TypesOfEvents.OpenBasket);
 			},
 		});
 		return card.render({
@@ -133,7 +138,7 @@ events.on('product:changed', () => {
 });
 
 // Открытие формы доставки
-events.on('order_payment:open', () => {
+events.on(TypesOfEvents.OpenPayment, () => {
 	const order = appData.initOrder();
 	modal.render({
 		content: deliveryForm.render({
@@ -146,27 +151,27 @@ events.on('order_payment:open', () => {
 });
 
 // Изменение способа оплаты
-events.on('payment:changed', (data: { target: string }) => {
+events.on(TypesOfEvents.SelectPayment, (data: { target: string }) => {
 	appData.order.payment = data.target as IPaymentType;
 });
 
 // Изменение адреса
-events.on('order.address:change', (data: { value: string }) => {
+events.on(TypesOfEvents.ChangeInputAddress, (data: { value: string }) => {
 	appData.order.address = data.value;
 });
 
 // Изменение почты
-events.on('contacts.email:change', (data: { value: string }) => {
+events.on(TypesOfEvents.ChangeInputEmail, (data: { value: string }) => {
 	appData.order.email = data.value;
 });
 
 // Изменение телефона
-events.on('contacts.phone:change', (data: { value: string }) => {
+events.on(TypesOfEvents.ChangeInputPhone, (data: { value: string }) => {
 	appData.order.phone = data.value;
 });
 
 // Изменение состояния валидации
-events.on('form:changed', (errors: Partial<IFormErrors>) => {
+events.on(TypesOfEvents.Validation, (errors: Partial<IFormErrors>) => {
 	const { payment, address, email, phone } = errors;
 	deliveryForm.valid = !payment && !address;
 	contactsForm.valid = !email && !phone;
@@ -176,12 +181,12 @@ events.on('form:changed', (errors: Partial<IFormErrors>) => {
 		.filter((i) => !!i).join('; ');
 });
 
-events.on('order:submit', () => {
-	events.emit('order_contacts:open');
+events.on(TypesOfEvents.SubmitPaymentAdressForm, () => {
+	events.emit(TypesOfEvents.OpenUserContacts);
 });
 
 // Открытие формы с контактами
-events.on('order_contacts:open', () => {
+events.on(TypesOfEvents.OpenUserContacts, () => {
 	const order = appData.order;
 	modal.render({
 		content: contactsForm.render({
@@ -193,7 +198,7 @@ events.on('order_contacts:open', () => {
 	});
 });
 
-events.on('contacts:submit', () => {
+events.on(TypesOfEvents.SubmitUserContactsForm, () => {
 	const order = appData.order;
 	api.postOrderProducts(
 			{
@@ -206,11 +211,6 @@ events.on('contacts:submit', () => {
 			}
 		)
 		.then((result) => {
-			const success = new Success(cloneTemplate(successTemplate), events, {
-				onClick: () => {
-					modal.close();
-				},
-			});
 			modal.render({
 				content: success.render({
 					total: result.total,

@@ -1,4 +1,4 @@
-import { IAppState, IProduct, IOrder  } from '../../types';
+import { IAppState, IProduct, IOrder, TypesOfEvents } from '../../types';
 import { Model } from '../base/BaseModel';
 import { IEvents } from '../base/BaseEvents';
 import { Product } from './Product';
@@ -16,7 +16,7 @@ export class AppState extends Model<IAppState> {
 
 	set catalog(items: IProduct[]) {
 		this._catalog = items.map((item) => new Product(item, this.events));
-		this.emitChanges('catalog:changed', { catalog: this.catalog });
+		this.emitChanges(TypesOfEvents.DownloadProducts, { catalog: this.catalog });
 	}
 
 	get catalog(): IProduct[] {

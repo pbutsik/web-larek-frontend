@@ -1,7 +1,7 @@
 import { ensureElement } from '../../utils/utils';
 import { Component } from '../base/BaseComponent';
 import { IEvents } from '../base/BaseEvents';
-import { IModalData } from '../../types';
+import { IModalData, TypesOfEvents } from '../../types';
 
 
 export class Modal extends Component<IModalData> {
@@ -21,7 +21,7 @@ export class Modal extends Component<IModalData> {
 		[this._closeButton, this.container].forEach((element) => {
 			element.addEventListener('click', () => {
 				this.close();
-				this.events.emit('modal:close');
+				this.events.emit(TypesOfEvents.CloseModal);
 			});
 		});
 		this._content.addEventListener('click', (event) => event.stopPropagation());
@@ -33,13 +33,13 @@ export class Modal extends Component<IModalData> {
 
 	open(): void {
 		this.toggleClass(this.container, 'modal_active', true);
-		this.events.emit('modal:open');
+		this.events.emit(TypesOfEvents.OpenModal);
 	}
 
 	close(): void {
 		this.toggleClass(this.container, 'modal_active', false);
 		this.content = null;
-		this.events.emit('modal:close');
+		this.events.emit(TypesOfEvents.CloseModal);
 	}
 
 	render(data: IModalData): HTMLElement {

@@ -1,4 +1,4 @@
-import { IFormErrors, IProduct, IOrder } from '../../types';
+import { IFormErrors, IProduct, IOrder, TypesOfEvents } from '../../types';
 import { Model } from '../base/BaseModel';
 
 
@@ -16,25 +16,25 @@ export class Order extends Model<IOrder> {
 		} else {
 			this._formErrors.payment = '';
 		}
-		this.emitChanges('form:changed', this._formErrors);
+		this.emitChanges(TypesOfEvents.Validation, this._formErrors);
 		if (!this.address) {
 			this._formErrors.address = 'Необходимо указать адрес доставки';
 		} else {
 			this._formErrors.address = '';
 		}
-		this.emitChanges('form:changed', this._formErrors);
+		this.emitChanges(TypesOfEvents.Validation, this._formErrors);
 		if (!this._email) {
 			this._formErrors.email = 'Необходимо указать почту';
 		} else {
 			this._formErrors.email = '';
 		}
-		this.emitChanges('form:changed', this._formErrors);
+		this.emitChanges(TypesOfEvents.Validation, this._formErrors);
 		if (!this._phone) {
 			this._formErrors.phone = 'Необходимо указать телефон';
 		} else {
 			this._formErrors.phone = '';
 		}
-		this.emitChanges('form:changed', this._formErrors);
+		this.emitChanges(TypesOfEvents.Validation, this._formErrors);
 	}
 
 
@@ -91,6 +91,6 @@ export class Order extends Model<IOrder> {
 
 	postOrder(): void {
 		this.clearOrder();
-		this.emitChanges('order:post');
+		this.emitChanges(TypesOfEvents.PostOrder);
 	}
 }

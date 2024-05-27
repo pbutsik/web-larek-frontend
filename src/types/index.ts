@@ -148,3 +148,28 @@ export interface ISuccess {
 export interface IActions {
     onClick: () => void;
 }
+
+enum Color {  
+    White = 'white',
+    Black = 'black',
+
+}
+
+export enum TypesOfEvents {
+	DownloadProducts = 'catalog:changed', // подгружаем доступные лоты	
+	OpenProduct = 'card:open', // открываем карточку лота для просмотра
+	OpenModal = 'modal:open', // блокировка при открытии модального окна
+	CloseModal = 'modal:close', // снятие блокировки при закрытии модального окна
+	OpenBasket = 'basket:open', // открываем корзину
+	ChangeInBasketPtoducts = 'product:changed', // добавляем/удаляем лот из корзины
+	Validation = 'form:changed', // проверяем форму отправки
+	OpenPayment = 'order_payment:open', // начинаем оформление заказа
+	SubmitPaymentAdressForm = 'order:submit', // заполнили первую форму
+	OpenUserContacts = 'order_contacts:open', // продолжаем оформление заказа
+	SubmitUserContactsForm = 'contacts:submit', // заполнили первую форму
+	SelectPayment = 'payment:changed', // выбираем способ оплаты
+	ChangeInputAddress = 'order.address:change', // изменили адрес доставки
+	ChangeInputEmail = 'contacts.email:change', // изменили почту для связи
+	ChangeInputPhone = 'contacts.phone:change', // изменили телефон для связи
+	PostOrder = 'order:post', // завершаем заказ
+}

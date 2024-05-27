@@ -1,4 +1,4 @@
-import { IPaymentType, IOrderForm } from '../../types';
+import { IPaymentType, IOrderForm, TypesOfEvents } from '../../types';
 import { ensureElement } from '../../utils/utils';
 import { IEvents } from '../base/BaseEvents';
 import { Form } from './Form';
@@ -24,7 +24,7 @@ export class DeliveryForm extends Form<IOrderForm> {
 		this._paymentContainer.addEventListener('click', (evt: MouseEvent) => {
 			const target = evt.target as HTMLButtonElement;
 			this.setClassPaymentMethod(target.name);
-			events.emit('payment:changed', { target: target.name });
+			events.emit(TypesOfEvents.SelectPayment, { target: target.name });
 		});
 	}
 

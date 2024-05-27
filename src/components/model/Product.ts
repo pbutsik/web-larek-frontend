@@ -1,4 +1,4 @@
-import { IProduct } from '../../types';
+import { IProduct, TypesOfEvents } from '../../types';
 import { Model } from '../base/BaseModel';
 
 
@@ -14,12 +14,12 @@ export class Product extends Model<IProduct> {
 	// добавить карточку товара в корзину
 	addToBasket(): void {
 		this.ordered = true;
-		this.emitChanges('product:changed', { ordered: this.ordered });
+		this.emitChanges(TypesOfEvents.ChangeInBasketPtoducts, { ordered: this.ordered });
 	}
 
 	// удалить карточку товара из корзины
 	deleteFromBasket(): void {
 		this.ordered = false;
-		this.emitChanges('product:changed', { ordered: this.ordered });
+		this.emitChanges(TypesOfEvents.ChangeInBasketPtoducts, { ordered: this.ordered });
 	}
 }

@@ -1,7 +1,7 @@
 import { createElement, ensureElement } from '../../utils/utils';
 import { Component } from '../base/BaseComponent';
 import { EventEmitter } from '../base/BaseEvents';
-import { IBasketView } from '../../types';
+import { IBasketView, TypesOfEvents } from '../../types';
 
 
 export class Basket extends Component<IBasketView> {
@@ -19,7 +19,7 @@ export class Basket extends Component<IBasketView> {
 		// генерируем событие открытия формы заказа
 		if (this._button) {
 			this._button.addEventListener('click', () => {
-				events.emit('order_payment:open');
+				events.emit(TypesOfEvents.OpenPayment);
 			});
 		}
 
