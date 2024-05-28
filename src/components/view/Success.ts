@@ -20,7 +20,7 @@ export class Success extends Component<ISuccess> {
     }
 
     set total(value: number){
-        this._total.textContent = `Списано ${super.modifyPrice(value)}`;
+        this.setText(this._total, `Списано ${super.modifyPrice(value)}`);
     }
 }
 

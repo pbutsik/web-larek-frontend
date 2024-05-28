@@ -52,9 +52,7 @@ api.getProductList()
 		appData.catalog = res;
         // console.log(appData.catalog)
 	})
-	.catch(err => {
-        console.error(err);
-    })
+	.catch(console.error)
 
 // Отображение карточек
 events.on(TypesOfEvents.DownloadProducts, () => {
@@ -218,7 +216,5 @@ events.on(TypesOfEvents.SubmitUserContactsForm, () => {
 			});
 			appData.clearBasket();
 		})
-		.catch((err) => {
-			console.error(err);
-		});
+		.catch(console.error)
 });

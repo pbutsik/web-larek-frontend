@@ -39,7 +39,7 @@ export class Card extends Component<ICard> {
 
 	set category(value: IProductCategory) {
 		this.setText(this._category, value);
-		this._category.classList.add(`card__category_${super.cardCategory(value)}`);
+		this.toggleClass(this._category, `card__category_${super.cardCategory(value)}`, true);
 	}
 
 	set title(value: string) {

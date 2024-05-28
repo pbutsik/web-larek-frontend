@@ -10,7 +10,19 @@ export class Order extends Model<IOrder> {
 	protected _items: IProduct[] = [];
 	protected _formErrors: IFormErrors = {};
 
+
+	_validateEmail(email:string) {
+		const re = /^(([^&lt;&gt;()\[\]\\.,;:\s@"]+(\.[^&lt;&gt;()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(String(email).toLowerCase());
+	}
+
+	_validatePhone(phone:string) {
+		const re = /^\+[\d]{1}\([\d]{3}\)[\d]{7}$/;
+		return re.test(String(phone).toLowerCase());
+	}
+
 	validateOrder(): void {
+		
 		if (!this._payment) {
 			this._formErrors.payment = 'Необходимо выбрать способ оплаты';
 		} else {
@@ -23,14 +35,14 @@ export class Order extends Model<IOrder> {
 			this._formErrors.address = '';
 		}
 		this.emitChanges(TypesOfEvents.Validation, this._formErrors);
-		if (!this._email) {
+		if (!this._validateEmail(this._email)) {
 			this._formErrors.email = 'Необходимо указать почту';
 		} else {
 			this._formErrors.email = '';
 		}
 		this.emitChanges(TypesOfEvents.Validation, this._formErrors);
-		if (!this._phone) {
-			this._formErrors.phone = 'Необходимо указать телефон';
+		if (!this._validatePhone(this._phone)) {
+			this._formErrors.phone = 'Необходимо указать телефон в формате +7(999)1111111';
 		} else {
 			this._formErrors.phone = '';
 		}

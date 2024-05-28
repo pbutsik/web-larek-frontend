@@ -7,6 +7,7 @@ import { Form } from './Form';
 export class DeliveryForm extends Form<IOrderForm> {
 	protected _paymentContainer: HTMLDivElement;
 	protected _paymentButtons: HTMLButtonElement[];
+	protected _address: HTMLInputElement;
 
 
 	constructor(container: HTMLFormElement, events: IEvents) {
@@ -26,16 +27,14 @@ export class DeliveryForm extends Form<IOrderForm> {
 			this.setClassPaymentMethod(target.name);
 			events.emit(TypesOfEvents.SelectPayment, { target: target.name });
 		});
+		this._address = this.container.elements.namedItem('address') as HTMLInputElement
 	}
 
+	
 	setClassPaymentMethod(className: string): void {
 		this._paymentButtons.forEach((btn) => {
-			if (btn.name === className) {
-				this.toggleClass(btn, 'button_alt-active', true);
-			} else {
-				this.toggleClass(btn, 'button_alt-active', false);
-			}
-		});
+            this.toggleClass(btn, 'button_alt-active', btn.name === className);
+        });
 	}
 
 	set payment(value: string){
@@ -43,8 +42,7 @@ export class DeliveryForm extends Form<IOrderForm> {
 	}
 
 	set address(value: IPaymentType) {
-		(this.container.elements.namedItem('address') as HTMLInputElement).value =
-			value;
+		this._address.value = value;
 	}
 
 }
