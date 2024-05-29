@@ -13,7 +13,6 @@ export class Card extends Component<ICard> {
 	private _price?: HTMLElement;
 
 	constructor(
-		// protected blockName: string,
 		container: HTMLElement,
 		events: IEvents,
 		actions?: IActions
